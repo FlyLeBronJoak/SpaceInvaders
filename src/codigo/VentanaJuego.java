@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
@@ -24,6 +25,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     
     BufferedImage buffer = null;
     int contador=0;
+    Nave miNave = new Nave(ANCHOPANTALLA);
     
     //bucle de animacion del juego
     //en este caso, es un hilo de ejecucion que se 
@@ -46,9 +48,11 @@ public class VentanaJuego extends javax.swing.JFrame {
      */
     public VentanaJuego() {
         initComponents();
-        setSize(ANCHOPANTALLA, ALTOPANTALLA);
+        setSize(ANCHOPANTALLA+6, ALTOPANTALLA+29);
         buffer = (BufferedImage) jPanel1.createImage(ANCHOPANTALLA, ALTOPANTALLA);
         buffer.createGraphics();
+        miNave.x = ANCHOPANTALLA/2 - miNave.imagen.getWidth(this)/2;
+        miNave.y= ALTOPANTALLA - miNave.imagen.getHeight(this) - 10;
         
         //inicio el temporizador
         temporizador.start();
@@ -64,9 +68,8 @@ public class VentanaJuego extends javax.swing.JFrame {
         
         ////////////////////////////////////////////////////////////
         //redibujamos cada elemento en su nueva posicion en el buffer
-        
-        contador++;
-        System.out.println(contador);
+        miNave.mueve();
+        g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
         
         
         
@@ -90,16 +93,25 @@ public class VentanaJuego extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                formKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 768, Short.MAX_VALUE)
+            .addGap(0, 676, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 580, Short.MAX_VALUE)
+            .addGap(0, 552, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -116,6 +128,20 @@ public class VentanaJuego extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        switch (evt.getKeyCode()){
+            case KeyEvent.VK_LEFT:miNave.setPulsadoIzquierda(true);break;
+            case KeyEvent.VK_RIGHT:miNave.setPulsadoDerecha(true);break;
+            }
+        
+    }//GEN-LAST:event_formKeyPressed
+
+    private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
+        switch (evt.getKeyCode()){
+            case KeyEvent.VK_LEFT:miNave.setPulsadoIzquierda(false);break;
+            case KeyEvent.VK_RIGHT:miNave.setPulsadoDerecha(false);break;
+    }//GEN-LAST:event_formKeyReleased
+    }
     /**
      * @param args the command line arguments
      */
